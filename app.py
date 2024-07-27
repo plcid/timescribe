@@ -16,7 +16,7 @@ if __name__ == '__main__':
     build_path = os.path.join(os.path.dirname(__file__), 'build', 'index.html')
 
     # Create a webview window
-    window = webview.create_window('timescribe', build_path)
+    window = webview.create_window('timescribe', build_path, min_size=(960, 540))
 
     # Start the webview event loop
     webview.start()
