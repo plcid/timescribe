@@ -1,23 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import Main from './pages/Main';
 
 function App() {
-  const [message, setMessage] = useState('');
-
-  useEffect(() => {
-    async function fetchData() {
-      if (window.pywebview) {
-        const data = await window.pywebview.api.get_data();
-        setMessage(data.message);
-      }
-    }
-    fetchData();
-  }, []);
-
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>{message || 'Loading...'}</p>
-      </header>
+    <div>
+      <Routes>
+        <Route path="/" element={<Main />} />
+      </Routes>
     </div>
   );
 }
