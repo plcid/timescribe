@@ -2078,6 +2078,11 @@ input, select, textarea {
 			font-size: 2.5em;
 			letter-spacing: -0.035em;
 			line-height: 1;
+
+			img{
+				height: 45px;
+				width: auto;
+			}
 		}
 
 /* Nav */
@@ -2195,6 +2200,11 @@ input, select, textarea {
 				font-weight: 700;
 				font-size: 2.5em;
 				margin: 0 0 0.65em 0;
+
+				img{
+					height: 45px;
+					width: auto;
+				}
 			}
 
 			#banner header p {
