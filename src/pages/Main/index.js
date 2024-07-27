@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import './style.css'
 
 const Main = () => {
     const [isHovered, setIsHovered] = useState(false);
