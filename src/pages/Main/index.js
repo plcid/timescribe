@@ -1,7 +1,8 @@
 import { useState } from 'react';
 
 const Main = () => {
-    const [isHovered, setIsHovered] = useState(false);
+    const [isStartHovered, setIsStartHovered] = useState(false);
+    const [isStartSmallHovered, setIsStartSmallHovered] = useState(false);
     return (
         <>
             <style>
@@ -80,15 +81,15 @@ const Main = () => {
                             paddingRight:64,
                             paddingTop:8,
                             paddingBottom:8,
-                            backgroundColor:isHovered?'#6ad4dd':'#0f6cbd',
-                            cursor:isHovered?'pointer':'auto',
+                            backgroundColor:isStartHovered?'#6ad4dd':'#0f6cbd',
+                            cursor:isStartHovered?'pointer':'auto',
                             color:'#fff',
                             border:'none',
                             borderRadius:16,
                             transition:'all 0.25s ease-out',
                         }}
-                        onMouseEnter={() => setIsHovered(true)}
-                        onMouseLeave={() => setIsHovered(false)}
+                        onMouseEnter={() => setIsStartHovered(true)}
+                        onMouseLeave={() => setIsStartHovered(false)}
                     >
                         Start Scribing
                     </button>
@@ -104,8 +105,97 @@ const Main = () => {
                     backgroundColor:'#7aa2e3',
                     height:50,
                     padding:8,
+                    display:'flex',
+                    alignItems:'center',
+                    justifyContent:'center',
                 }}
             >
+                <div>
+                    <button
+                        style={{
+                            fontSize:25,
+                            fontWeight:'bold',
+                            height:50,
+                            fontFamily:'Open sans',
+                            backgroundColor:'#7aa2e3',
+                            color:'#fff',
+                            border:'1px solid #fff',
+                            marginRight:'auto',
+
+
+                            cursor:isStartSmallHovered?'pointer':'auto',
+                        }}
+                        onMouseEnter={() => setIsStartSmallHovered(true)}
+                        onMouseLeave={() => setIsStartSmallHovered(false)}
+                    >
+                        Start Scribing
+                    </button>
+                </div>
+
+                <div
+                    style={{
+                        flex:1,
+                        display:'flex',
+                        alignItems:'right',
+                        justifyContent:'right',
+                        gap:8,
+                        paddingRight:16,
+                    }}
+                >
+                    <button
+                        style={{
+                            fontSize:20,
+                            fontWeight:'bold',
+                            height:50,
+                            fontFamily:'Open sans',
+                            backgroundColor:'#0f6cbd',
+                            color:'#fff',
+                            border:'none',
+
+
+
+                            cursor:isStartSmallHovered?'pointer':'auto',
+                        }}
+                        onMouseEnter={() => setIsStartSmallHovered(true)}
+                        onMouseLeave={() => setIsStartSmallHovered(false)}
+                    >
+                        Export to Outlook
+                    </button>
+                    <button
+                        style={{
+                            fontSize:20,
+                            fontWeight:'bold',
+                            height:50,
+                            fontFamily:'Open sans',
+                            backgroundColor:'#202020',
+                            color:'#fff',
+                            border:'none',
+
+                            cursor:isStartSmallHovered?'pointer':'auto',
+                        }}
+                        onMouseEnter={() => setIsStartSmallHovered(true)}
+                        onMouseLeave={() => setIsStartSmallHovered(false)}
+                    >
+                        Export to Notion
+                    </button>
+                    <button
+                        style={{
+                            fontSize:20,
+                            fontWeight:'bold',
+                            height:50,
+                            fontFamily:'Open sans',
+                            backgroundColor:'#fff',
+                            color:'#000',
+                            border:'1px solid #fff',
+
+                            cursor:isStartSmallHovered?'pointer':'auto',
+                        }}
+                        onMouseEnter={() => setIsStartSmallHovered(true)}
+                        onMouseLeave={() => setIsStartSmallHovered(false)}
+                    >
+                        Export to Google Calendar
+                    </button>
+                </div>
             </div>
         </>
     )
