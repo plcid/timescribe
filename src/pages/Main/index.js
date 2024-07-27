@@ -1,6 +1,7 @@
 import { useEffect, useReducer, useState } from "react";
 import "./style.css";
 import stringSimilarity from "string-similarity";
+import { GoogleAuth } from "../../googleAuth";
 
 let boolIdx = new Array(1000).fill(true);
 
@@ -10,31 +11,19 @@ const Main = () => {
   const [isStartHovered, setIsStartHovered] = useState(false);
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
-  const [eventsFound, setEventsFound] = useState([
-    // "totally real event totally real event totally real event totally real event totally real event totally real event totally real event totally real event totally real event totally real event totally real event totally real event totally real event totally real event totally real event ",
-    //         "poo poo",
-  ]);
+  const [eventsFound, setEventsFound] = useState([]);
 
-  // Helper function to check for similar strings and replace with the longer one
   const addUniqueContexts = (newContexts) => {
     setEventsFound((prevEvents) => {
-      // Create a copy of previous events to avoid mutating state directly
       let updatedEvents = [...prevEvents];
-
-      // Iterate over new contexts
       newContexts.forEach((newContext) => {
         let isDuplicate = false;
-
-        // Check similarity with existing events
         updatedEvents = updatedEvents.map((existingContext) => {
-          // Check if the new context is similar to the existing context
           const similarity = stringSimilarity.compareTwoStrings(
             existingContext,
             newContext
           );
           if (similarity > 0.45) {
-            // Adjust similarity threshold as needed
-            // Replace with the longer context
             isDuplicate = true;
             return newContext.length > existingContext.length
               ? newContext
@@ -42,14 +31,10 @@ const Main = () => {
           }
           return existingContext;
         });
-
         if (!isDuplicate) {
-          // Add new context if it's not a duplicate
           updatedEvents.push(newContext);
         }
       });
-
-      // Remove duplicates after processing
       return Array.from(new Set(updatedEvents));
     });
   };
@@ -70,16 +55,14 @@ const Main = () => {
       const intervalId = setInterval(() => {
         setCount((prevCount) => prevCount + 1);
         fetchAndUpdate();
-      }, 5000); // Interval runs every 5000 milliseconds (5 seconds)
+      }, 5000);
 
-      // Clean up the interval when the component unmounts
       return () => clearInterval(intervalId);
     }
-  }, [isScribing, count]); // Dependency on isScribing and count
+  }, [isScribing, count]);
 
   const toggleScribing = () => {
     setIsScribing(!isScribing);
-    // window.pywebview.api.is_minimized();
   };
 
   const resetScribing = () => {
@@ -168,109 +151,107 @@ const Main = () => {
               ) : (
                 <>
                   {eventsFound.map((eventF, idx) => (
-                    <>
-                      <div
-                        id="event_found"
+                    <div
+                      key={idx} // Added key for better list rendering
+                      id="event_found"
+                      style={{
+                        width: "90vw",
+                        borderRadius: 16,
+                        border: "1px solid #000",
+                        marginTop: 20,
+                        marginBottom: 20,
+                        display: "flex",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <textarea
                         style={{
-                          width: "90vw",
-                          borderRadius: 16,
-                          border: "1px solid #000",
-
-                          marginTop: 20,
-                          marginBottom: 20,
+                          margin: 16,
+                          fontSize: 20,
+                          color: "#000",
+                          background: "#fff",
+                          border: "none",
+                          width: "100%",
+                          whiteSpace: "normal",
+                          fontFamily: "Open sans",
+                        }}
+                        placeholder={boolIdx[idx] ? `${eventF}` : ""}
+                        disabled={boolIdx[idx]}
+                      />
+                      <div
+                        style={{
+                          flex: 1,
                           display: "flex",
-                          justifyContent: "center",
+                          alignItems: "right",
+                          justifyContent: "right",
                         }}
                       >
-                        <textarea
-                          style={{
-                            margin: 16,
-                            fontSize: 20,
-                            color: "#000",
-                            background: "#fff",
-                            border: "none",
-                            width: "100%",
-                            whiteSpace: "normal",
-                            fontFamily: "Open sans",
-                          }}
-                          placeholder={boolIdx[idx] ? `${eventF}` : ""}
-                          disabled={boolIdx[idx]}
-                        />
                         <div
                           style={{
-                            flex: 1,
                             display: "flex",
-                            alignItems: "right",
-                            justifyContent: "right",
+                            alignItems: "center",
+                            justifyContent: "center",
                           }}
                         >
-                          <div
+                          <button
+                            id="bottom_bar_button"
+                            onClick={() => {
+                              boolIdx[idx] = !boolIdx[idx];
+                              forceUpdate();
+                            }}
                             style={{
+                              margin: 8,
+                              backgroundColor: "transparent",
+                              width: 30,
+                              height: 30,
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
+                              border: "none",
                             }}
                           >
-                            <button
-                              id="bottom_bar_button"
-                              onClick={() => {
-                                boolIdx[idx] = !boolIdx[idx];
-                                forceUpdate();
-                              }}
-                              style={{
-                                margin: 8,
-                                backgroundColor: "transparent",
-                                width: 30,
-                                height: 30,
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                border: "none",
-                              }}
-                            >
-                              <img
-                                draggable={false}
-                                src={
-                                  boolIdx[idx]
-                                    ? "https://cdn1.iconfinder.com/data/icons/essential-21/128/Edit-512.png"
-                                    : "https://cdn-icons-png.freepik.com/256/10057/10057635.png?semt=ais_hybrid"
-                                }
-                                width="30px"
-                                height="30px"
-                              ></img>
-                            </button>
+                            <img
+                              draggable={false}
+                              src={
+                                boolIdx[idx]
+                                  ? "https://cdn1.iconfinder.com/data/icons/essential-21/128/Edit-512.png"
+                                  : "https://cdn-icons-png.freepik.com/256/10057/10057635.png?semt=ais_hybrid"
+                              }
+                              width="30px"
+                              height="30px"
+                            />
+                          </button>
 
-                            <button
-                              id="bottom_bar_button"
-                              onClick={() => {
-                                const copy = eventsFound;
-                                copy.splice(idx, 1);
-                                setEventsFound(copy);
-                                forceUpdate();
-                              }}
-                              disabled={!boolIdx[idx]}
-                              style={{
-                                margin: 8,
-                                backgroundColor: "transparent",
-                                width: 30,
-                                height: 30,
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                border: "none",
-                              }}
-                            >
-                              <img
-                                draggable={false}
-                                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgy6cH4pk8uBtQ-_MBHx5MtDO8ms62KxR0UQ&s"
-                                width="30px"
-                                height="30px"
-                              ></img>
-                            </button>
-                          </div>
+                          <button
+                            id="bottom_bar_button"
+                            onClick={() => {
+                              const copy = eventsFound;
+                              copy.splice(idx, 1);
+                              setEventsFound(copy);
+                              forceUpdate();
+                            }}
+                            disabled={!boolIdx[idx]}
+                            style={{
+                              margin: 8,
+                              backgroundColor: "transparent",
+                              width: 30,
+                              height: 30,
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              border: "none",
+                            }}
+                          >
+                            <img
+                              draggable={false}
+                              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgy6cH4pk8uBtQ-_MBHx5MtDO8ms62KxR0UQ&s"
+                              width="30px"
+                              height="30px"
+                            />
+                          </button>
                         </div>
                       </div>
-                    </>
+                    </div>
                   ))}
                   <h1>‎</h1>
                 </>
@@ -364,7 +345,7 @@ const Main = () => {
             id="bottom_bar_button"
             onClick={resetScribing}
           >
-            {"Reset"}
+            Reset
           </button>
         </div>
 
@@ -378,34 +359,6 @@ const Main = () => {
             paddingRight: 16,
           }}
         >
-          {/* <button
-                        style={{
-                            fontSize:20,
-                            fontWeight:'bold',
-                            height:50,
-                            fontFamily:'Open sans',
-                            backgroundColor:'#0f6cbd',
-                            color:'#fff',
-                            border:'none',
-
-                            }} id='bottom_bar_button'
-                    >
-                        Export to Outlook
-                    </button>
-                    <button
-                        style={{
-                            fontSize:20,
-                            fontWeight:'bold',
-                            height:50,
-                            fontFamily:'Open sans',
-                            backgroundColor:'#202020',
-                            color:'#fff',
-                            border:'none',
-
-                            }} id='bottom_bar_button'
-                    >
-                        Export to Notion
-                    </button> */}
           <button
             style={{
               fontSize: 20,
@@ -420,6 +373,7 @@ const Main = () => {
           >
             Export to Google Calendar
           </button>
+          <GoogleAuth />
         </div>
       </div>
     </>
