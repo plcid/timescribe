@@ -4,12 +4,12 @@ import { GoogleLogin } from "react-google-login";
 export const GoogleAuth = () => {
   const responseGoogle = (response) => {
     // Handle successful response here
-    // console.log("Google Login Success:", response);
+    console.log("Google Login Success:", response);
   };
 
   const responseError = (error) => {
     // Handle error response here
-    // console.log("Google Login Error:", error);
+    console.log("Google Login Error:", error);
   };
 
   return (
@@ -24,3 +24,4 @@ export const GoogleAuth = () => {
     />
   );
 };
+
