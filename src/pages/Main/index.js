@@ -1,6 +1,7 @@
 import { useEffect, useReducer, useState } from 'react';
 import './style.css'
 import stringSimilarity from 'string-similarity';
+import { event } from 'react-ga';
 
 let boolIdx = new Array(1000).fill(true)
 
@@ -53,7 +54,7 @@ const Main = () => {
     const fetchAndUpdate = async () => {
       try {
         const newContexts = await window.pywebview.api.findstuff();
-        if (newContexts !== 'bad read') {
+        if (newContexts !== 'bad read' && eventsFound.length < 1000) {
           addUniqueContexts(newContexts);
         }
       } catch (error) {
@@ -80,6 +81,17 @@ const Main = () => {
     const resetScribing = () => {
         setEventsFound([])
         setIsScribing(false)
+    }
+
+    const exportAsCSV = () => {
+        // Combine the array into a single string with new lines
+        const fileContent = eventsFound.join("\n");
+
+        window.pywebview.api.save_to_file(fileContent).then(res => {
+            alert(res)
+        })
+
+        resetScribing();
     }
 
     return (
@@ -413,8 +425,10 @@ const Main = () => {
                             border:'1px solid #fff',
 
                             }} id='bottom_bar_button'
+
+                        onClick={exportAsCSV}
                     >
-                        Export to Google Calendar
+                        Export as TXT
                     </button>
                 </div>
             </div>

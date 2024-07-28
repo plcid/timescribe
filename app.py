@@ -81,6 +81,12 @@ class API:
             return contexts
         except Exception as e:
             return 'bad read'
+        
+    def save_to_file(self, file_content):
+        file_path = 'output.txt'
+        with open(file_path, 'w') as f:
+            f.write(file_content)
+        return 'File saved successfully!'
 
 if __name__ == '__main__':
     # Start the server in a separate thread if needed
